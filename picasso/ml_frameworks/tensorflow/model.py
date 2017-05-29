@@ -31,7 +31,12 @@ class TFModel(Model):
             self.latest_ckpt_time = str(datetime.fromtimestamp(
                 os.path.getmtime(latest_ckpt_fn)
             ))
-            latest_ckpt = latest_ckpt_fn[:latest_ckpt_fn.rfind('.ckpt') + 5]
+            fileext_div = latest_ckpt_fn.rfind('.ckpt')
+            additional_ext = latest_ckpt_fn.rfind('.', fileext_div + 1)
+            if additional_ext < 0:
+                latest_ckpt = latest_ckpt_fn
+            else:
+                latest_ckpt = latest_ckpt_fn[:additional_ext]
         except ValueError:
             raise FileNotFoundError('No checkpoint (.ckpt) files '
                                     'available at {}'.format(data_dir))
